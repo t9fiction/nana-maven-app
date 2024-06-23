@@ -1,24 +1,28 @@
+def gv
+
 pipeline {
     agent any
-    tools {
-        maven 'jenkins-maven'
-    }
     stages {
+        stage("init") {
+            steps {
+                script {
+                    gv = load "script.groovy"
+                }
+            }
+        }
         stage("build jar") {
             steps {
-                echo "Building the Application"
-                sh "mvn package"
+                script {
+                    echo "building jar"
+                    //gv.buildJar()
+                }
             }
         }
         stage("build image") {
             steps {
                 script {
-                    echo "building docker image"
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASS', usernameVariable: 'USER')]){
-                        sh 'docker build -t a4illusionist/maven-app:2.0 .'
-                        sh "echo $PASS | docker login -u $USER --password-stdin"
-                        sh 'docker push a4illusionist/maven-app:2.0'
-                    }
+                    echo "building image"
+                    //gv.buildImage()
                 }
             }
         }
